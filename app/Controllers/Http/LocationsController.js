@@ -12,13 +12,13 @@ const axiosInstance = axios.create()
 const googleMapsClient = new Client({ axiosInstance })
 
 class LocationsController {
-  async index() {
+  async index () {
     const locations = await Location.all()
 
     return { locations }
   }
 
-  async store({ request, auth, response }) {
+  async store ({ request, auth, response }) {
     const { lat, lng, name, complement } = request.all()
 
     if (!name) return response.badRequest().json({ error: 'Preencha o nome do local.' })
@@ -33,7 +33,7 @@ class LocationsController {
 
     if (!result) return response.notFound().json({ error: 'Não foi possível encontrar o local solicitado.' })
 
-    function findComponentByType(components, type, fallback) {
+    function findComponentByType (components, type, fallback) {
       const foundElement = components.find((component) => component.types.includes(type))
       return foundElement ? foundElement.long_name : fallback
     }
@@ -66,17 +66,43 @@ class LocationsController {
     return location
   }
 
-  async show({ request, response }) {
+  async show ({ request, response }) {
     const location = await Location.find(request.params.id)
 
     if (!location) return response.notFound()
 
+    await location.load('user')
+
     return location
   }
 
-  async update() {}
+  async update ({ request, auth, response }) {
+    const name = request.input('name')
+    const location = await Location.find(request.params.id)
 
-  async destroy() {}
+    if (!location) return response.notFound()
+
+    if (location.user_id !== auth.user.id) return response.forbidden()
+
+    location.name = name
+    location.save()
+
+    return location
+  }
+
+  async destroy ({ request, auth, response }) {
+    const location = await Location.find(request.params.id)
+
+    console.log(location)
+
+    if (!location) return response.notFound()
+
+    if (location.user_id !== auth.user.id) return response.forbidden()
+
+    await location.delete()
+
+    return location
+  }
 }
 
 module.exports = LocationsController
