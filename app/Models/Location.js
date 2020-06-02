@@ -11,6 +11,14 @@ class Location extends Model {
   user () {
     return this.belongsTo('App/Models/User')
   }
+
+  ratings () {
+    return this.hasMany('App/Models/Rating')
+  }
+
+  comments () {
+    return this.hasMany('App/Models/Comment')
+  }
 }
 
 module.exports = Location
