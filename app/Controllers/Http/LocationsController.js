@@ -1,17 +1,15 @@
 'use strict'
 
-const NodeGeocoder = require('node-geocoder')
+const axios = require('axios').default
+const { Client } = require('@googlemaps/google-maps-services-js')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Location = use('App/Models/Location')
 
 const Env = use('Env')
 
-const geocoder = NodeGeocoder({
-  provider: 'google',
-  apiKey: Env.get('GOOGLE_API_KEY', ''),
-  httpAdapter: 'https',
-})
+const axiosInstance = axios.create()
+const googleMapsClient = new Client({ axiosInstance })
 
 class LocationsController {
   async index() {
@@ -21,24 +19,46 @@ class LocationsController {
   }
 
   async store({ request, auth, response }) {
-    const { lat, lng: lon } = request.all()
+    const { lat, lng, name, complement } = request.all()
 
-    const [firstPlace] = await geocoder.reverse({ lat, lon })
+    if (!name) return response.badRequest().json({ error: 'Preencha o nome do local.' })
 
-    if (!firstPlace) return response.badRequest()
-    console.log(firstPlace)
+    const { data: { results: [result] } } = await googleMapsClient.reverseGeocode({
+      params: {
+        key: Env.get('GOOGLE_API_KEY', ''),
+        language: 'pt-BR',
+        latlng: { lat, lng }
+      }
+    })
+
+    if (!result) return response.notFound().json({ error: 'Não foi possível encontrar o local solicitado.' })
+
+    function findComponentByType(components, type, fallback) {
+      const foundElement = components.find((component) => component.types.includes(type))
+      return foundElement ? foundElement.long_name : fallback
+    }
+
+    const zipcode = findComponentByType(result.address_components, 'postal_code', '')
+    const country = findComponentByType(result.address_components, 'country', '')
+    const state = findComponentByType(result.address_components, 'administrative_area_level_1', '')
+    const city = findComponentByType(result.address_components, 'administrative_area_level_2', '')
+    const district = findComponentByType(result.address_components, 'sublocality', '')
+    const street = findComponentByType(result.address_components, 'route', '')
+    const streetNumber = findComponentByType(result.address_components, 'street_number', '')
+
     const data = {
       user_id: auth.user.id,
-      lat: firstPlace.latitude,
-      lng: firstPlace.longitude,
-      zipcode: firstPlace.zipcode,
-      street: firstPlace.streetName,
-      street_number: firstPlace.streetNumber,
-      district: firstPlace.extra ? firstPlace.extra.neighborhood : firstPlace.district,
-      city: firstPlace.administrativeLevels ? firstPlace.administrativeLevels.level2long : firstPlace.city,
-      state: firstPlace.administrativeLevels ? firstPlace.administrativeLevels.level1long : firstPlace.state,
-      country: firstPlace.country,
-      name: firstPlace.
+      street_number: streetNumber,
+      lat,
+      lng,
+      name,
+      zipcode,
+      street,
+      district,
+      city,
+      state,
+      country,
+      complement
     }
 
     const location = await Location.create(data)
