@@ -9,7 +9,7 @@ class User {
     }
   }
 
-  get messages() {
+  get messages () {
     return {
       'username.required': 'Você deve fornecer um nome de usuário para se cadastrar.',
       'username.unique': 'Este nome de usuário já foi utilizado, tente novamente com outro.',

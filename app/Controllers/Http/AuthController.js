@@ -4,7 +4,7 @@
 const User = use('App/Models/User')
 
 class AuthController {
-  async signUp({ request }) {
+  async signUp ({ request }) {
     const data = request.only(['username', 'email', 'password'])
 
     const user = await User.create(data)
@@ -12,7 +12,7 @@ class AuthController {
     return user
   }
 
-  async signIn({ request, auth }) {
+  async signIn ({ request, auth }) {
     const { email, password } = request.only(['email', 'password'])
 
     const credentials = await auth.attempt(email, password)

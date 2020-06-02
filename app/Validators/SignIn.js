@@ -8,7 +8,7 @@ class SignIn {
     }
   }
 
-  get messages() {
+  get messages () {
     return {
       'email.required': 'Você deve fornecer um e-mail para continuar.',
       'email.email': 'Você deve fornecer um e-mail válido.',
