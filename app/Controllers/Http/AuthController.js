@@ -13,9 +13,9 @@ class AuthController {
   }
 
   async signIn({ request, auth }) {
-    const data = request.only(['email', 'password'])
+    const { email, password } = request.only(['email', 'password'])
 
-    const credentials = await auth.attempt(data)
+    const credentials = await auth.attempt(email, password)
 
     return credentials
   }
