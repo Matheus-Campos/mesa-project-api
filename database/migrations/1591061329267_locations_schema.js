@@ -7,8 +7,8 @@ class LocationsSchema extends Schema {
   up () {
     this.create('locations', (table) => {
       table.increments()
-      table.decimal('lat').notNullable()
-      table.decimal('lng').notNullable()
+      table.float('lat', 9, 6).notNullable()
+      table.float('lng', 9, 6).notNullable()
       table.string('name', 254).notNullable()
       table.string('street', 254).notNullable()
       table.string('street_number', 10)
