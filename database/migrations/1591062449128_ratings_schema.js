@@ -7,7 +7,7 @@ class RatingsSchema extends Schema {
   up () {
     this.create('ratings', (table) => {
       table.increments()
-      table.integer('rate').notNullable()
+      table.integer('rating').notNullable()
       table
         .integer('user_id')
         .unsigned()

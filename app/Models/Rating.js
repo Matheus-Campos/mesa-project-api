@@ -4,6 +4,10 @@
 const Model = use('Model')
 
 class Rating extends Model {
+  static get hidden () {
+    return ['created_at', 'updated_at']
+  }
+
   user () {
     return this.belongsTo('App/Models/User')
   }

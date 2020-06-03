@@ -19,6 +19,8 @@ const Route = use('Route')
 Route.post('/sign_up', 'AuthController.signUp').validator('SignUp')
 Route.post('/sign_in', 'AuthController.signIn').validator('SignIn')
 
-Route
-  .resource('locations', 'LocationsController')
-  .middleware(['auth'])
+Route.group(() => {
+  Route.resource('locations', 'LocationController')
+  Route.post('/ratings', 'RatingController.store')
+  Route.post('/comments', 'CommentController.store')
+}).middleware(['auth'])
