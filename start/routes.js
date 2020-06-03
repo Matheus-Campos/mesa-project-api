@@ -28,7 +28,8 @@ Route.group(() => {
       [['locations.update'], ['LocationUpdate']]
     ]))
 
-  Route.resource('/users', 'UserController').only(['show', 'update'])
+  Route.get('/users/:id', 'UserController.show')
+  Route.put('/users/:id', 'UserController.update').validator('UserUpdate')
   Route.post('/ratings', 'RatingController.store')
   Route.post('/comments', 'CommentController.store')
-}).middleware(['auth'])
+}).prefix('api/v1').middleware(['auth'])
