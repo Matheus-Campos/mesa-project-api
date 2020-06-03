@@ -94,7 +94,7 @@ class LocationController {
     if (location.user_id !== auth.user.id) return response.forbidden()
 
     location.name = name
-    location.save()
+    await location.save()
 
     return location
   }

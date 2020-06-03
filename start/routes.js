@@ -20,7 +20,8 @@ Route.post('/sign_up', 'AuthController.signUp').validator('SignUp')
 Route.post('/sign_in', 'AuthController.signIn').validator('SignIn')
 
 Route.group(() => {
-  Route.resource('locations', 'LocationController')
+  Route.resource('locations', 'LocationController').apiOnly()
   Route.post('/ratings', 'RatingController.store')
   Route.post('/comments', 'CommentController.store')
+  Route.resource('/users', 'UserController').only(['show', 'update'])
 }).middleware(['auth'])
