@@ -13,7 +13,7 @@ const googleMapsClient = new Client({ axiosInstance })
 
 class LocationController {
   async index () {
-    const locations = await Location.all()
+    const locations = await Location.query().with('user').fetch()
 
     return { locations }
   }
@@ -80,7 +80,7 @@ class LocationController {
 
     if (!location) return response.notFound()
 
-    await location.loadMany(['user', 'ratings', 'comments'])
+    await location.loadMany(['user', 'ratings.user'])
 
     return location
   }
