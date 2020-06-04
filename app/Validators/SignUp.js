@@ -5,7 +5,7 @@ class User {
     return {
       username: 'required|unique:users',
       email: 'required|email|unique:users',
-      password: 'required|confirmed'
+      password: 'required|confirmed|min:6'
     }
   }
 
@@ -17,7 +17,8 @@ class User {
       'email.email': 'Por favor, forneça um e-mail válido.',
       'email.unique': 'Este e-mail já está em uso, você já possui uma conta aqui?',
       'password.required': 'Você precisa criar uma senha para se cadastrar.',
-      'password.confirmed': 'Por favor, confirme sua senha no campo de confirmação.'
+      'password.confirmed': 'Por favor, confirme sua senha no campo de confirmação.',
+      'password.min': 'A senha deve ter no mínimo 6 caracteres.'
     }
   }
 }
