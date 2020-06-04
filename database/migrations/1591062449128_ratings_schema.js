@@ -8,6 +8,7 @@ class RatingsSchema extends Schema {
     this.create('ratings', (table) => {
       table.increments()
       table.integer('rating').notNullable()
+      table.text('comment')
       table
         .integer('user_id')
         .unsigned()
