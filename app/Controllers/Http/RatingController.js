@@ -14,7 +14,7 @@ class RatingController {
     } catch (err) {
       switch (err.code) {
         case 'ER_DUP_ENTRY':
-          return response.conflict({ error: 'Este local já foi cadastrado.' })
+          return response.conflict({ error: 'Este local já foi avaliado por você.' })
         default:
           return response.internalServerError()
       }
