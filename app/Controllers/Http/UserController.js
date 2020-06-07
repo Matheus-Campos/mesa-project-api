@@ -29,7 +29,6 @@ class UserController {
     // check if user is trying to change his password
     if (password && newPassword) {
       const samePassword = await Hash.verify(password, user.password)
-      console.log(samePassword)
 
       if (samePassword) {
         user.password = newPassword
