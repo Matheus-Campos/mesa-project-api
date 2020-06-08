@@ -1,6 +1,7 @@
 'use strict'
 
 const { test, trait } = use('Test/Suite')('User')
+const Factory = use('Factory')
 
 trait('DatabaseTransactions')
 
@@ -21,12 +22,7 @@ test('it should create a new user', async ({ assert }) => {
 })
 
 test('it should hide user password', async ({ assert }) => {
-  const data = {
-    username: 'test user 1',
-    email: 'test1@test.com',
-    password: '123456'
-  }
-  const user = await User.create(data)
+  const user = await Factory.model('App/Models/User').make()
 
   const userJson = user.toJSON()
 
@@ -36,12 +32,7 @@ test('it should hide user password', async ({ assert }) => {
 })
 
 test('it should update user', async ({ assert }) => {
-  const data = {
-    username: 'test user',
-    email: 'test@test.com',
-    password: '123456'
-  }
-  const user = await User.create(data)
+  const user = await Factory.model('App/Models/User').make()
   const oldPassword = user.password
 
   user.username = 'new username'
