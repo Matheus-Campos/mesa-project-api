@@ -30,8 +30,8 @@ Factory.blueprint('App/Models/Location', (faker) => {
     lng: faker.longitude(),
     name: faker.string(),
     street: faker.street(),
-    street_number: faker.integer(),
-    complement: faker.sentence(),
+    street_number: faker.integer({ min: 1, max: 5000 }),
+    complement: faker.string(),
     district: faker.city(),
     city: faker.city(),
     state: faker.state(),
@@ -42,7 +42,7 @@ Factory.blueprint('App/Models/Location', (faker) => {
 
 Factory.blueprint('App/Models/Rating', (faker) => {
   return {
-    rating: faker.integer(),
+    rating: faker.integer({ min: 1, max: 5 }),
     comment: faker.paragraph()
   }
 })
